@@ -1,0 +1,8 @@
+Maven项目构建命令：
+  Maven构建命令使用mvn开头，后面添加功能参数，可以一次执行多个命令，使用空格分隔
+  
+mvn compile           #编译
+mvn clean             #清理
+mvn test              #测试
+mvn package           #打包
+mvn install           #安装到本地仓库
