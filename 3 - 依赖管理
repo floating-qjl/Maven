@@ -1,0 +1,48 @@
+依赖配置：
+  依赖指当前项目运行所需的jar，一个项目可以设置多个依赖
+  
+格式:
+<!--设置当前项目所依赖的所有jar-->
+<dependencies>
+  <!一设置具体的依赖-->
+  <dependency>
+    <!一依赖所属群组id-->
+    <groupId>junit</groupId>
+    <!一依赖所属项目id-->
+    <artifactId>junit</artifactId>
+    <!一依赖版本号-->
+    <version>4.12</version>
+  </dependency>
+</dependencies>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
