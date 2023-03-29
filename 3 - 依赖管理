@@ -17,8 +17,170 @@
 
 
 
+依赖具有传递性：
+  直接依赖：在当前项目中通过依赖配置建立的依赖关系
+  间接依赖：被资源的资源如果依赖其他资源，当前项目间接依赖其他资源
+  
+  
+
+依赖传递冲突问题:
+  路径优先: 当依赖中出现相同的资源时，层级越深，优先级越低，层级越浅，优先级越高
+  声明优先: 当资源在相同层级被依赖时，配置顺序靠前的覆盖配置顺序靠后的
+  特殊优先: 当同级配置了相同资源的不同版本，后配置的覆盖先配置的（pom.xml文件）
 
 
+
+排除依赖：
+  排除依赖指主动断开依赖的资源，被排除的资源无需指定版本——不需要
+
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.12</version>
+  <exclusions>
+    <exclusion>
+      <groupId>org.hamcrest</groupid>
+      <artifactId>hamcrest-core</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+
+//不需要版本
+
+
+可选依赖：（不透明，即不让别人发现自己用过什么）
+  在依赖中添加<optional>标签
+
+
+
+
+
+
+
+
+依赖范围：
+    在依赖中添加<scope>标签
+
+
+依赖的jar默认情况可以在任何地方使用，可以通过scope标签设定其作用范围
+作用范围
+  主程序范围有效(main文件夹范围内)
+  测试程序范围有效(test文件夹范围内)
+  是否参与打包(package指令范围内)
+  
+scope         主代码          测试代码        打包           范例
+compile(默认)   Y                Y             Y            log4j
+test                             Y                          junit
+provided        Y                Y                        servlet-api
+runtime                                        Y            jdbc
+
+
+
+
+
+
+
+依赖范围传递性：
+  带有依赖范围的资源在进行传递时，作用范围将受到影响
+
+               compile         test         provided        runtime       <-- 直接依赖（项目一）
+               
+compile        compile         test         provided        runtime
+
+test           
+
+provided
+
+runtime        runtime         test         provided        runtime
+  / \
+   |
+ 间接依赖
+（项目二）
+
+
+
+生命周期：（运行阶段）
+
+项目构建生命周期：
+  Maven对项目构建的生命周期划分为3套
+    clean: 清理工作
+    default: 核心工作，例如编译，测试，打包，部署等
+    site: 产生报告，发布站点等
+
+
+
+
+
+clean生命周期:
+  pre-clean   执行一些需要在clean之前完成的工作
+  clean       移除所有上一次构建生成的文件
+  post-clean  执行一些需要在clean之后立刻完成的工作
+
+
+
+
+
+default构建生命周期:
+  validate(校验)                                     校验项目是杏正确并且所有必要的信息可以完成项目的构建过程。
+  initialize(初始化)                                 初始化构建状态，比如设置属性值。
+  generate-sources(生成源代码)                       生成包含在编译阶段中的任何源代码。
+  process-sources(处理源代码)                        处理源代码，比如说，过滤任意值。
+  generate-resources(生成资源文件)                   生成将会包含在项目包中的资源文件。
+  process-resources(处理资源文件)                    复制和处理资源到目标目录，为打包阶段最好准备。
+  compile(编译)                                      编译项目的源代码。
+  process-classes(处理类文件)                        处理编译生成的文件，比如说对Java class文件做字节码改善优化.
+  generate-test-sources(生成测试源代码)              生成包含在编译阶段中的任何测试源代码。
+  process-test-sources(处理测试源代码)               处理测试源代码，比如说，过滤任意值。
+  generate-test-resources(生成测试资源文件)          为测试创建资源文件。
+  process-test-resources(处理测试资源文件)           复制和处理测试资源到目标目录。
+  test-compile(编译测试源码)                         编译测试源代码到测试目标目录.
+  process-test-classes(处理测试类文件)               处理测试源码编译生成的文件。
+  test(测试)                                         使用合适的单元测试框架运行测试(Juint是其中之一).
+  prepare-package (C准备打包)                        在实际打包之前，执行任何的必要的操作为打包做准备。
+  package (打包)                                     将编译后的代码打包成可分发格式的文件，比如JAR.WAR或者EAR文件。
+  pre-integration-test(集成测试前)                   在执行集成测试前进行必要的动作。比如说，搭建需要的环境
+  integration-test(集成测试)                         处理和部署项目到可以运行集成测试环境中。
+  post-integration-test(集成测试后)                  在执行集成测试完成后进行必要的动作。比如说,清理集成测试环境。
+  verify(验证)                                       运行任意的检查来验证项目包有效且达到质量标准。
+  install(安装)                                      安装项目包到本地合库，这样项目包可以用作其他本地项目的依赖。
+  deploy(部署)                                       将最终的项目包复制到远程仓库中与其他开发者和项目共享.
+
+
+
+
+
+
+site构建生命周期:
+  pre-site                                            执行一些需要在生成站点文档之前完成的工作
+  site                                                生成项目的站点文档
+  post-site                                           执行一些需要在生成站点文档之后完成的工作，并且为部署做准备
+  site-deploy                                         将生成的站点文档部署到特定的服务器上
+
+
+
+
+插件:
+  插件与生命周期内的阶段绑定，在执行到对应生命周期时执行对应的插件功能
+  默认maven在各个生命周期上绑定有预设的功能
+  通过插件可以自定义其他功能
+
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-source-plugin</artifactId>
+      <version>2.2.1</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>jar</goal>    //对源码打包
+          </goals>
+          <phase> generate-test-resources</phase>   //执行时期（位置）
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
 
 
 
